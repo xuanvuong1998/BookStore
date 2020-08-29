@@ -7,9 +7,8 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,15 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author TiTi
- */
+
 @Entity
 @Table(name = "Book", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
@@ -33,10 +29,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b")
     , @NamedQuery(name = "Book.findById", query = "SELECT b FROM Book b WHERE b.id = :id")
     , @NamedQuery(name = "Book.findByName", query = "SELECT b FROM Book b WHERE b.name = :name")
+    , @NamedQuery(name = "Book.findByNameAndRangePrice", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.isActive = TRUE AND b.quantity > 0")   
     , @NamedQuery(name = "Book.findByImage", query = "SELECT b FROM Book b WHERE b.image = :image")
     , @NamedQuery(name = "Book.findByDescription", query = "SELECT b FROM Book b WHERE b.description = :description")
     , @NamedQuery(name = "Book.findByPrice", query = "SELECT b FROM Book b WHERE b.price = :price")
     , @NamedQuery(name = "Book.findByAuthor", query = "SELECT b FROM Book b WHERE b.author = :author")
+    , @NamedQuery(name = "Book.findByImportDate", query = "SELECT b FROM Book b WHERE b.importDate = :importDate")
     , @NamedQuery(name = "Book.findByQuantity", query = "SELECT b FROM Book b WHERE b.quantity = :quantity")
     , @NamedQuery(name = "Book.findByIsActive", query = "SELECT b FROM Book b WHERE b.isActive = :isActive")})
 public class Book implements Serializable {
@@ -58,14 +56,15 @@ public class Book implements Serializable {
     private double price;
     @Column(name = "Author", length = 200)
     private String author;
+    @Column(name = "ImportDate")
+    @Temporal(TemporalType.DATE)
+    private Date importDate;
     @Basic(optional = false)
     @Column(name = "Quantity", nullable = false)
     private int quantity;
     @Basic(optional = false)
     @Column(name = "IsActive", nullable = false)
     private boolean isActive;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
-    private Collection<OrderDetails> orderDetailsCollection;
     @JoinColumn(name = "CategoryId", referencedColumnName = "Id", nullable = false)
     @ManyToOne(optional = false)
     private Category categoryId;
@@ -133,6 +132,14 @@ public class Book implements Serializable {
         this.author = author;
     }
 
+    public Date getImportDate() {
+        return importDate;
+    }
+
+    public void setImportDate(Date importDate) {
+        this.importDate = importDate;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -147,15 +154,6 @@ public class Book implements Serializable {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-    }
-
-    @XmlTransient
-    public Collection<OrderDetails> getOrderDetailsCollection() {
-        return orderDetailsCollection;
-    }
-
-    public void setOrderDetailsCollection(Collection<OrderDetails> orderDetailsCollection) {
-        this.orderDetailsCollection = orderDetailsCollection;
     }
 
     public Category getCategoryId() {
