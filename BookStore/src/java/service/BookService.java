@@ -8,7 +8,6 @@ package service;
 
 import dao.BookDAO;
 import entity.Book;
-import entity.UserAccount;
 import java.util.List;
 
 
@@ -24,11 +23,15 @@ public class BookService {
         return bookDao.getBooks(name, minPrice, maxPrice);
     }
     
+    public List<Book> getAllBooks(String name, float minPrice, float maxPrice) {
+        return bookDao.getAllBooks(name, minPrice, maxPrice);
+    }
+    
     public Book getBook(int id) {
         return bookDao.getBookById(id);
     }
     
-    public Book updateBook(Book book, UserAccount user) {
+    public Book updateBook(Book book) {
         return bookDao.updateBook(book);
     }
     

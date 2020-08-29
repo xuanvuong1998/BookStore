@@ -21,6 +21,32 @@ public class BookDAO {
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
 
+            List<Book> books = em.createNamedQuery("Book.findByNameAndRangePriceActive")
+                    .setParameter("name", "%" + name + "%")
+                    .setParameter("minPrice", minPrice)
+                    .setParameter("maxPrice", maxPrice)
+                    .getResultList();
+
+            transaction.commit();
+
+            return books;
+        } catch (Exception e) {
+            Logger.getLogger(BookDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public List<Book> getAllBooks(String name, float minPrice, float maxPrice) {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+
             List<Book> books = em.createNamedQuery("Book.findByNameAndRangePrice")
                     .setParameter("name", "%" + name + "%")
                     .setParameter("minPrice", minPrice)

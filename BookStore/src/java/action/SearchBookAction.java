@@ -5,10 +5,14 @@
  */
 package action;
 
+import com.opensymphony.xwork2.ActionContext;
 import entity.Book;
+import entity.UserAccount;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import service.BookService;
+import service.UserAccountService;
 
 public class SearchBookAction {
 
@@ -30,24 +34,32 @@ public class SearchBookAction {
     public String execute() throws Exception {
         String url = SUCCESS;
 
-        setBookName(getBookName() == null ? "" : getBookName());
-        setCategoryName(getCategoryName() == null ? "" : getCategoryName());
+        bookName = bookName == null ? "" : bookName;
+        categoryName = categoryName == null ? "" : categoryName;
+
+        Map session = ActionContext.getContext().getSession();
+        UserAccountService userService = new UserAccountService(session);
+        UserAccount user = userService.getCurrentUser();
 
         try {
             BookService bookService = new BookService();
-            int searchMaxPrice = getMaxPrice() == 0 ? MAX_PRICE : getMaxPrice();
-            setBooks(bookService.getBooks(getBookName(), getMinPrice(), searchMaxPrice));
+            int searchMaxPrice = maxPrice == 0 ? MAX_PRICE : maxPrice;
+            if (user != null && user.getIsAdmin()) {
+                books = bookService.getAllBooks(bookName, minPrice, searchMaxPrice);
+            } else {
+                books = bookService.getBooks(bookName, minPrice, searchMaxPrice);
+            }
 
             // remove book with category not match with search category name
             List<Book> booksToRemove = new ArrayList<>();
-            for (Book book : getBooks()) {
+            for (Book book : books) {
                 if (!book.getCategoryId().getName().toLowerCase().contains(categoryName.toLowerCase())) {
                     booksToRemove.add(book);
                 }
             }
-            getBooks().removeAll(booksToRemove);
+            books.removeAll(booksToRemove);
 
-            setBooksCount(getBooks().size());
+            booksCount = books.size();
         } catch (Exception e) {
             setBooks(new ArrayList<>());
             setMessage("Error something happenned! Message: " + e.getMessage());

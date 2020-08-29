@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -21,7 +21,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @Entity
 @Table(name = "Book", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
@@ -29,7 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b")
     , @NamedQuery(name = "Book.findById", query = "SELECT b FROM Book b WHERE b.id = :id")
     , @NamedQuery(name = "Book.findByName", query = "SELECT b FROM Book b WHERE b.name = :name")
-    , @NamedQuery(name = "Book.findByNameAndRangePrice", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.isActive = TRUE AND b.quantity > 0")   
+    , @NamedQuery(name = "Book.findByNameAndRangePriceActive", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.isActive = TRUE AND b.quantity > 0")
+    , @NamedQuery(name = "Book.findByNameAndRangePrice", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.quantity > 0")
     , @NamedQuery(name = "Book.findByImage", query = "SELECT b FROM Book b WHERE b.image = :image")
     , @NamedQuery(name = "Book.findByDescription", query = "SELECT b FROM Book b WHERE b.description = :description")
     , @NamedQuery(name = "Book.findByPrice", query = "SELECT b FROM Book b WHERE b.price = :price")

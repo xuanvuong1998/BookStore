@@ -25,5 +25,11 @@
         <action name="searchBook" class="action.SearchBookAction">
             <result name="success">searchBook.jsp</result>
         </action>
+        
+        <action name="updateBook" class="action.UpdateBookAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">searchBook</param>
+            </result>
+        </action>
     </package>
 </struts>

@@ -140,7 +140,13 @@
 
                                 <!--Import date-->
                                 <td style="text-align: center">
-                                    <s:date name="importDate" format="dd/MM/yyyy"/>
+                                    <s:if test="#session.USER != null && #session.USER.isAdmin">
+                                        <s:date name="importDate" var="formattedDate" format="yyyy-MM-dd"/>
+                                        <s:textfield name="importDate" value="%{formattedDate}" type="date"/>
+                                    </s:if>
+                                    <s:else>
+                                        <s:date name="importDate" format="dd/MM/yyyy"/>
+                                    </s:else>
                                 </td>
 
                                 <!--Quantity-->
@@ -171,10 +177,10 @@
                                 <!--Status - Admin only-->
                                 <s:if test="#session.USER != null && #session.USER.isAdmin">
                                     <td>
-                                        <select name="isActive">
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
+                                        <s:select name="isActive" 
+                                                  list="#{'true':'Yes', 'false':'No'}"
+                                                  value="isActive"/>
+                                        
                                     </td>
                                 </s:if>
 
@@ -185,7 +191,7 @@
                                             name="btAction" 
                                             value="Update"
                                             cssStyle="margin-top: 5px; color: steelblue"/>
-                                        <s:hidden name="productId" value="%{id}"/>
+                                        <s:hidden name="bookId" value="%{id}"/>
                                         <br/>
                                         <s:submit 
                                             name="btAction" 
