@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import service.CategoryService;
+import service.UserAccountService;
 
 public class AdminFilter implements Filter {
 
@@ -39,6 +40,7 @@ public class AdminFilter implements Filter {
         adminResources = new ArrayList<>();
         adminResources.add("updateBook");
         adminResources.add("createBook");
+        adminResources.add("createDiscount");
     }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
@@ -123,7 +125,12 @@ public class AdminFilter implements Filter {
             if (user != null && user.getIsAdmin()) {
                 CategoryService categoryService = new CategoryService();
                 List<Category> categories = categoryService.getAllCategories();
+                
+                UserAccountService userService = new UserAccountService();
+                List<UserAccount> users = userService.getAllUsers();
+                
                 session.setAttribute("CATEGORIES", categories);
+                session.setAttribute("USERS", users);
             } else if (user == null || !user.getIsAdmin()) {
                 String uri = req.getRequestURI();
                 for (String resource : adminResources) {

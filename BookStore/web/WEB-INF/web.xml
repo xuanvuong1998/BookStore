@@ -45,6 +45,10 @@
         <url-pattern>/searchBook.action</url-pattern>
     </filter-mapping>
     <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/createDiscount.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>struts2</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>

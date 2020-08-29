@@ -89,4 +89,26 @@ public class DiscountDAO {
 
         return null;
     }
+    
+    public Discount createDiscount(Discount discount) {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+
+            em.persist(discount);
+
+            transaction.commit();
+
+            return discount;
+        } catch (Exception e) {
+            Logger.getLogger(DiscountDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return null;
+    }
 }

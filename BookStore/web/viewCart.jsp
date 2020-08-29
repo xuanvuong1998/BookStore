@@ -111,7 +111,7 @@
                         <s:select label="Discount"
                                   list="#session.DISCOUNTS"
                                   listKey="id"
-                                  listValue="discountCode"
+                                  listValue="discountDisplayLabel"
                                   name="discountId"
                                   />
                     </s:if>

@@ -55,5 +55,9 @@
         <action name="orderHistory" class="action.OrderHistoryAction">
             <result>orderHistory.jsp</result>
         </action>
+        
+        <action name="createDiscount" class="action.CreateDiscountAction">
+            <result name="success">createDiscount.jsp</result>
+        </action>
     </package>
 </struts>

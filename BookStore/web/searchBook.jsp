@@ -32,6 +32,8 @@
 
         <s:if test="#session.USER != null && #session.USER.isAdmin">
             <s:a href="createBook.jsp">Create new book</s:a>
+            <br/>
+            <s:a href="createDiscount.jsp">Create new discount</s:a>
         </s:if>
         <s:else>
             <s:a href="viewCart.jsp">View cart</s:a>

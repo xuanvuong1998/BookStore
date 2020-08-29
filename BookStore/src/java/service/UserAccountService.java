@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package service;
 
 import dao.UserAccountDAO;
 import entity.UserAccount;
+import java.util.List;
 import java.util.Map;
 
-
 public class UserAccountService {
-private Map session;
-    
+
+    private Map session;
+
     public UserAccountService() {
     }
 
@@ -34,22 +34,32 @@ private Map session;
         }
         return null;
     }
-    
+
     public void logout() {
         this.setCurrentUser(null);
     }
-    
+
     public void setCurrentUser(UserAccount user) {
         if (session == null) {
             return;
         }
         session.put("USER", user);
     }
-    
+
     public UserAccount getCurrentUser() {
         if (session == null) {
             return null;
         }
         return (UserAccount) session.get("USER");
+    }
+
+    public List<UserAccount> getAllUsers() {
+        UserAccountDAO userAccountDao = new UserAccountDAO();
+        return userAccountDao.getAllUsers();
+    }
+    
+    public UserAccount getUser(String username) {
+        UserAccountDAO userAccountDao = new UserAccountDAO();
+        return userAccountDao.getUserByUsername(username);
     }
 }

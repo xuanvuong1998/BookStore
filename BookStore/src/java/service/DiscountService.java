@@ -37,4 +37,8 @@ public class DiscountService {
     public Discount updateDiscount(Discount discount) {
         return discountDAO.updateDiscount(discount);
     }
+    
+    public Discount createDiscount(Discount discount) {
+        return discountDAO.createDiscount(discount);
+    }
 }

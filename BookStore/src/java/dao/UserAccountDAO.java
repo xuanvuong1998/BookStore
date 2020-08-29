@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dao;
 
 import entity.UserAccount;
@@ -14,9 +13,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import utils.DBUtils;
 
-
 public class UserAccountDAO {
-public UserAccount getUserByUsername(String username) {
+
+    public UserAccount getUserByUsername(String username) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -31,6 +30,29 @@ public UserAccount getUserByUsername(String username) {
             if (!users.isEmpty()) {
                 return users.get(0);
             }
+        } catch (Exception e) {
+            Logger.getLogger(UserAccountDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public List<UserAccount> getAllUsers() {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+
+            List<UserAccount> users = em.createNamedQuery("UserAccount.findAllUser")
+                    .getResultList();
+
+            transaction.commit();
+
+            return users;
         } catch (Exception e) {
             Logger.getLogger(UserAccountDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {

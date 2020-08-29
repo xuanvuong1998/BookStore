@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package entity;
 
 import java.io.Serializable;
@@ -29,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UserAccount.findAll", query = "SELECT u FROM UserAccount u")
+    , @NamedQuery(name = "UserAccount.findAllUser", query = "SELECT u FROM UserAccount u WHERE u.isAdmin = FALSE")
     , @NamedQuery(name = "UserAccount.findByUsername", query = "SELECT u FROM UserAccount u WHERE u.username = :username")
     , @NamedQuery(name = "UserAccount.findByPassword", query = "SELECT u FROM UserAccount u WHERE u.password = :password")
     , @NamedQuery(name = "UserAccount.findByFullname", query = "SELECT u FROM UserAccount u WHERE u.fullname = :fullname")
