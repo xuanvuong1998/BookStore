@@ -127,7 +127,7 @@
                                         <s:number name="price" currency="vnd"/> vnd
                                     </s:else>
                                 </td>
-                                
+
                                 <!--Author-->
                                 <td style="text-align: right">
                                     <s:if test="#session.USER != null && #session.USER.isAdmin">
@@ -171,12 +171,10 @@
                                 <!--Status - Admin only-->
                                 <s:if test="#session.USER != null && #session.USER.isAdmin">
                                     <td>
-                                        <s:if test="#session.STATUSES != null">
-                                            <select name="isActive">
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
-                                            </select>
-                                        </s:if>
+                                        <select name="isActive">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
                                     </td>
                                 </s:if>
 

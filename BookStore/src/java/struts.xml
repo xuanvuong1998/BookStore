@@ -18,6 +18,10 @@
             <result name="fail">login.jsp</result>
         </action>
         
+        <action name="logout" class="action.LogoutAction">
+            <result type="redirectAction">searchBook</result>
+        </action>
+        
         <action name="searchBook" class="action.SearchBookAction">
             <result name="success">searchBook.jsp</result>
         </action>
