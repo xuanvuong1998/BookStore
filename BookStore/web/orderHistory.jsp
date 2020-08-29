@@ -90,6 +90,14 @@
                         </s:iterator>
                     </tbody>
                 </table>
+                <s:if test="discountId != null">
+                    <p>
+                        <em>Discount code: <strong><s:text name="%{discountId.discountCode}"/></strong></em>
+                        <br/>
+                        <em>Discount percent: <strong><s:number name="%{discountId.discountPercent}"/>%</strong></em>
+                        <s:set var="totalPrice" value="%{#totalPrice * (100 - discountId.discountPercent) / 100}" />
+                    </p>
+                </s:if>
                 <p><em>Total price: <strong><s:number name="#totalPrice" currency="vnd"/> vnd</strong></em></p>
 
                 <br/>

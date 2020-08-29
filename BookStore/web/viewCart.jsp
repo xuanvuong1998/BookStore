@@ -107,6 +107,14 @@
                               listValue="name"
                               name="paymentMethodId"
                               />
+                    <s:if test="%{!#session.DISCOUNTS.isEmpty()}">
+                        <s:select label="Discount"
+                                  list="#session.DISCOUNTS"
+                                  listKey="id"
+                                  listValue="discountCode"
+                                  name="discountId"
+                                  />
+                    </s:if>
                     <s:submit value="Confirm"/>
                 </s:form>
             </s:else>

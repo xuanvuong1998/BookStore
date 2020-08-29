@@ -6,6 +6,7 @@
 package action;
 
 import com.opensymphony.xwork2.ActionContext;
+import entity.Discount;
 import entity.PaymentMethod;
 import entity.ShoppingOrder;
 import entity.UserAccount;
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import service.CartService;
+import service.DiscountService;
 import service.PaymentMethodService;
 import service.UserAccountService;
 
@@ -22,6 +24,7 @@ public class ConfirmCartAction {
     private final String FAIL = "fail";
 
     private int paymentMethodId;
+    private int discountId;
 
     private String message;
 
@@ -45,6 +48,16 @@ public class ConfirmCartAction {
                 PaymentMethodService paymentMethodService = new PaymentMethodService();
                 PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(paymentMethodId);
                 cart.setPaymentMethodId(paymentMethod);
+                
+                if (discountId != -1) {
+                    DiscountService discountService = new DiscountService();
+                    Discount discount = discountService.getDiscount(discountId);
+                    discount.setIsUsed(true);
+                    discountService.updateDiscount(discount);
+                    
+                    cart.setDiscountId(discount);
+                }
+                
                 cart.setUsername(user);
                 cart.setCreatedDate(Date.from(Instant.now()));
 
@@ -86,6 +99,20 @@ public class ConfirmCartAction {
      */
     public void setPaymentMethodId(int paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
+    }
+
+    /**
+     * @return the discountId
+     */
+    public int getDiscountId() {
+        return discountId;
+    }
+
+    /**
+     * @param discountId the discountId to set
+     */
+    public void setDiscountId(int discountId) {
+        this.discountId = discountId;
     }
 
 }

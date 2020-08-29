@@ -5,6 +5,7 @@
  */
 package filter;
 
+import entity.Discount;
 import entity.PaymentMethod;
 import entity.UserAccount;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import service.DiscountService;
 import service.PaymentMethodService;
 
 /**
@@ -152,7 +154,12 @@ public class UserFilter implements Filter {
             if (uri.contains("viewCart.jsp")) {
                 PaymentMethodService paymentMethodService = new PaymentMethodService();
                 List<PaymentMethod> paymentMethods = paymentMethodService.getAllPaymentMethods();
+                
+                DiscountService discountService = new DiscountService();
+                List<Discount> discounts = discountService.getAllDiscounts(user);
+                
                 session.setAttribute("PAYMENT_METHODS", paymentMethods);
+                session.setAttribute("DISCOUNTS", discounts);
             }
             
             chain.doFilter(request, response);
