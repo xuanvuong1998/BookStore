@@ -7,7 +7,7 @@
 package service;
 
 import dao.BookDAO;
-import dao.TableOrderDAO;
+import dao.ShoppingOrderDAO;
 import entity.Book;
 import entity.OrderDetails;
 import entity.ShoppingOrder;
@@ -92,7 +92,7 @@ public class CartService {
     }
     
     public boolean saveCart(ShoppingOrder cart) {        
-        TableOrderDAO orderDAO = new TableOrderDAO();
+        ShoppingOrderDAO orderDAO = new ShoppingOrderDAO();
         ShoppingOrder order = orderDAO.createOrder(cart);
         
         if (order != null) {

@@ -15,7 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import utils.DBUtils;
 
-public class TableOrderDAO {
+public class ShoppingOrderDAO {
 
     public ShoppingOrder createOrder(ShoppingOrder order) {
         EntityManager em = DBUtils.getEntityManager();
@@ -29,7 +29,7 @@ public class TableOrderDAO {
 
             return order;
         } catch (Exception e) {
-            Logger.getLogger(TableOrderDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ShoppingOrderDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             if (em != null) {
                 em.close();
@@ -55,7 +55,7 @@ public class TableOrderDAO {
 
             return orders;
         } catch (Exception e) {
-            Logger.getLogger(TableOrderDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ShoppingOrderDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             if (em != null) {
                 em.close();

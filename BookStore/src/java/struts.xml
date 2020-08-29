@@ -51,5 +51,9 @@
             <result name="success">viewCart.jsp</result>
             <result name="fail">login.jsp</result>
         </action>
+        
+        <action name="orderHistory" class="action.OrderHistoryAction">
+            <result>orderHistory.jsp</result>
+        </action>
     </package>
 </struts>
