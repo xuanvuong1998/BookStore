@@ -206,8 +206,8 @@
                                 <s:form action="addToCart" method="POST" theme="simple">
                                     <td style="text-align: center">
                                         <s:submit value="Add to cart"/>
-                                        <s:hidden name="productId" value="%{id}"/>
-                                        <s:hidden name="productName"/>
+                                        <s:hidden name="bookId" value="%{id}"/>
+                                        <s:hidden name="bookName"/>
                                         <s:hidden name="categoryName"/>
                                         <s:hidden name="minPrice"/>
                                         <s:hidden name="maxPrice"/>
@@ -225,8 +225,8 @@
         </s:else>
 
         <script>
-            function confirmIfDelete(productName) {
-                return confirm('You you want to delete ' + productName + '?');
+            function confirmIfDelete(bookName) {
+                return confirm('You you want to delete ' + bookName + '?');
             }
         </script>
     </body>

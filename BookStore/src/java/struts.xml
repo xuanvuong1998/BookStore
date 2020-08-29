@@ -35,5 +35,12 @@
         <action name="createBook" class="action.CreateBookAction">
             <result name="success">createBook.jsp</result>
         </action>
+        
+        <action name="addToCart" class="action.AddToCartAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">searchBook</param>
+                <param name="message">${message}</param>
+            </result>
+        </action>
     </package>
 </struts>
