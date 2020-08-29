@@ -31,5 +31,9 @@
                 <param name="actionName">searchBook</param>
             </result>
         </action>
+        
+        <action name="createBook" class="action.CreateBookAction">
+            <result name="success">createBook.jsp</result>
+        </action>
     </package>
 </struts>
