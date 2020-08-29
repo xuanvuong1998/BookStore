@@ -42,5 +42,9 @@
                 <param name="message">${message}</param>
             </result>
         </action>
+        
+        <action name="updateCart" class="action.UpdateCartAction">
+            <result>viewCart.jsp</result>
+        </action>
     </package>
 </struts>
