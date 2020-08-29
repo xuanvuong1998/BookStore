@@ -12,6 +12,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,29 +26,28 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author TiTi
- */
 @Entity
-@Table(name = "Order", catalog = "BookStore", schema = "dbo")
+@Table(name = "ShoppingOrder", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TableOrder.findAll", query = "SELECT t FROM TableOrder t")
-    , @NamedQuery(name = "TableOrder.findById", query = "SELECT t FROM TableOrder t WHERE t.id = :id")
-    , @NamedQuery(name = "TableOrder.findByUserAndDateRange", query = "SELECT t FROM TableOrder t WHERE t.username = :user AND t.createdDate >= :fromDate AND t.createdDate <= :toDate")
-    , @NamedQuery(name = "TableOrder.findByCreatedDate", query = "SELECT t FROM TableOrder t WHERE t.createdDate = :createdDate")})
-public class TableOrder implements Serializable {
+    @NamedQuery(name = "ShoppingOrder.findAll", query = "SELECT s FROM ShoppingOrder s")
+    , @NamedQuery(name = "ShoppingOrder.findById", query = "SELECT s FROM ShoppingOrder s WHERE s.id = :id")
+    , @NamedQuery(name = "ShoppingOrder.findByUserAndDateRange", query = "SELECT t FROM ShoppingOrder t WHERE t.username = :user AND t.createdDate >= :fromDate AND t.createdDate <= :toDate")
+    , @NamedQuery(name = "ShoppingOrder.findByCreatedDate", query = "SELECT s FROM ShoppingOrder s WHERE s.createdDate = :createdDate")})
+public class ShoppingOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @Column(name = "CreatedDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
+    private Collection<OrderDetails> orderDetailsCollection;
     @JoinColumn(name = "DiscountId", referencedColumnName = "Id")
     @ManyToOne
     private Discount discountId;
@@ -56,17 +57,15 @@ public class TableOrder implements Serializable {
     @JoinColumn(name = "Username", referencedColumnName = "Username", nullable = false)
     @ManyToOne(optional = false)
     private UserAccount username;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
-    private Collection<OrderDetails> orderDetailsCollection;
 
-    public TableOrder() {
+    public ShoppingOrder() {
     }
 
-    public TableOrder(Integer id) {
+    public ShoppingOrder(Integer id) {
         this.id = id;
     }
 
-    public TableOrder(Integer id, Date createdDate) {
+    public ShoppingOrder(Integer id, Date createdDate) {
         this.id = id;
         this.createdDate = createdDate;
     }
@@ -85,6 +84,15 @@ public class TableOrder implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    @XmlTransient
+    public Collection<OrderDetails> getOrderDetailsCollection() {
+        return orderDetailsCollection;
+    }
+
+    public void setOrderDetailsCollection(Collection<OrderDetails> orderDetailsCollection) {
+        this.orderDetailsCollection = orderDetailsCollection;
     }
 
     public Discount getDiscountId() {
@@ -111,15 +119,6 @@ public class TableOrder implements Serializable {
         this.username = username;
     }
 
-    @XmlTransient
-    public Collection<OrderDetails> getOrderDetailsCollection() {
-        return orderDetailsCollection;
-    }
-
-    public void setOrderDetailsCollection(Collection<OrderDetails> orderDetailsCollection) {
-        this.orderDetailsCollection = orderDetailsCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -130,10 +129,10 @@ public class TableOrder implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TableOrder)) {
+        if (!(object instanceof ShoppingOrder)) {
             return false;
         }
-        TableOrder other = (TableOrder) object;
+        ShoppingOrder other = (ShoppingOrder) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -142,7 +141,7 @@ public class TableOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.TableOrder[ id=" + id + " ]";
+        return "entity.ShoppingOrder[ id=" + id + " ]";
     }
 
 }

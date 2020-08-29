@@ -10,7 +10,7 @@ import dao.BookDAO;
 import dao.TableOrderDAO;
 import entity.Book;
 import entity.OrderDetails;
-import entity.TableOrder;
+import entity.ShoppingOrder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class CartService {
             return false;
         }
         
-        TableOrder cart = this.getCart();
+        ShoppingOrder cart = this.getCart();
 
         boolean isFound = false;
         for (OrderDetails d : cart.getOrderDetailsCollection()) {
@@ -49,24 +49,24 @@ public class CartService {
         if (session == null) {
             return false;
         }
-        TableOrder cart = this.getCart();
+        ShoppingOrder cart = this.getCart();
         if (cart == null) {
-            cart = new TableOrder();
+            cart = new ShoppingOrder();
             cart.setOrderDetailsCollection(new ArrayList<>());
             this.setCart(cart);
         }
         return true;
     }
     
-    public TableOrder getCart() {
+    public ShoppingOrder getCart() {
         if (session == null) {
             return null;
         }
-        TableOrder cart = (TableOrder) session.get("CART");
+        ShoppingOrder cart = (ShoppingOrder) session.get("CART");
         return cart;
     }
     
-    public boolean setCart(TableOrder cart) {
+    public boolean setCart(ShoppingOrder cart) {
         if (session == null) {
             return false;
         }
@@ -82,7 +82,7 @@ public class CartService {
         return detail.getQuantity() <= book.getQuantity();
     }
     
-    public boolean confirmBooks(TableOrder order) {
+    public boolean confirmBooks(ShoppingOrder order) {
         for (OrderDetails detail : order.getOrderDetailsCollection()) {
             if (!this.confirmBook(detail)) {
                 return false;
@@ -91,9 +91,9 @@ public class CartService {
         return true;
     }
     
-    public boolean saveCart(TableOrder cart) {        
+    public boolean saveCart(ShoppingOrder cart) {        
         TableOrderDAO orderDAO = new TableOrderDAO();
-        TableOrder order = orderDAO.createOrder(cart);
+        ShoppingOrder order = orderDAO.createOrder(cart);
         
         if (order != null) {
             // change products amount

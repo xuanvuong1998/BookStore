@@ -7,7 +7,7 @@ package action;
 
 import com.opensymphony.xwork2.ActionContext;
 import entity.OrderDetails;
-import entity.TableOrder;
+import entity.ShoppingOrder;
 import java.util.List;
 import java.util.Map;
 import service.CartService;
@@ -26,7 +26,7 @@ public class UpdateCartAction {
     public String execute() throws Exception {
         Map session = ActionContext.getContext().getSession();
         CartService cartService = new CartService(session);
-        TableOrder cart = cartService.getCart();
+        ShoppingOrder cart = cartService.getCart();
 
         List<OrderDetails> details = (List<OrderDetails>) cart.getOrderDetailsCollection();
 

@@ -6,9 +6,10 @@
 package entity;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,10 +19,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "Book", catalog = "BookStore", schema = "dbo")
@@ -40,6 +43,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Book.findByQuantity", query = "SELECT b FROM Book b WHERE b.quantity = :quantity")
     , @NamedQuery(name = "Book.findByIsActive", query = "SELECT b FROM Book b WHERE b.isActive = :isActive")})
 public class Book implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
+    private Collection<OrderDetails> orderDetailsCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -190,6 +196,15 @@ public class Book implements Serializable {
     @Override
     public String toString() {
         return "entity.Book[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<OrderDetails> getOrderDetailsCollection() {
+        return orderDetailsCollection;
+    }
+
+    public void setOrderDetailsCollection(Collection<OrderDetails> orderDetailsCollection) {
+        this.orderDetailsCollection = orderDetailsCollection;
     }
 
 }

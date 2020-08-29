@@ -35,6 +35,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "UserAccount.findByIsAdmin", query = "SELECT u FROM UserAccount u WHERE u.isAdmin = :isAdmin")})
 public class UserAccount implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
+    private Collection<ShoppingOrder> shoppingOrderCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -48,8 +51,6 @@ public class UserAccount implements Serializable {
     @Basic(optional = false)
     @Column(name = "IsAdmin", nullable = false)
     private boolean isAdmin;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
-    private Collection<TableOrder> tableOrderCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
     private Collection<Discount> discountCollection;
 
@@ -99,15 +100,6 @@ public class UserAccount implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TableOrder> getTableOrderCollection() {
-        return tableOrderCollection;
-    }
-
-    public void setTableOrderCollection(Collection<TableOrder> tableOrderCollection) {
-        this.tableOrderCollection = tableOrderCollection;
-    }
-
-    @XmlTransient
     public Collection<Discount> getDiscountCollection() {
         return discountCollection;
     }
@@ -139,6 +131,15 @@ public class UserAccount implements Serializable {
     @Override
     public String toString() {
         return "entity.UserAccount[ username=" + username + " ]";
+    }
+
+    @XmlTransient
+    public Collection<ShoppingOrder> getShoppingOrderCollection() {
+        return shoppingOrderCollection;
+    }
+
+    public void setShoppingOrderCollection(Collection<ShoppingOrder> shoppingOrderCollection) {
+        this.shoppingOrderCollection = shoppingOrderCollection;
     }
 
 }

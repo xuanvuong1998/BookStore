@@ -5,7 +5,7 @@
  */
 package dao;
 
-import entity.TableOrder;
+import entity.ShoppingOrder;
 import entity.UserAccount;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +17,7 @@ import utils.DBUtils;
 
 public class TableOrderDAO {
 
-    public TableOrder createOrder(TableOrder order) {
+    public ShoppingOrder createOrder(ShoppingOrder order) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -39,13 +39,13 @@ public class TableOrderDAO {
         return null;
     }
 
-    public List<TableOrder> getOrders(UserAccount user, Date fromDate, Date toDate) {
+    public List<ShoppingOrder> getOrders(UserAccount user, Date fromDate, Date toDate) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
 
-            List<TableOrder> orders = em.createNamedQuery("TableOrder.findByUserAndDateRange")
+            List<ShoppingOrder> orders = em.createNamedQuery("ShoppingOrder.findByUserAndDateRange")
                     .setParameter("fromDate", fromDate)
                     .setParameter("toDate", toDate)
                     .setParameter("user", user)

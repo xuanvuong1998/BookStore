@@ -10,6 +10,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,10 +20,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author TiTi
- */
 @Entity
 @Table(name = "OrderDetails", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
@@ -35,6 +33,7 @@ public class OrderDetails implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     private Integer id;
     @Basic(optional = false)
@@ -48,7 +47,7 @@ public class OrderDetails implements Serializable {
     private Book bookId;
     @JoinColumn(name = "OrderId", referencedColumnName = "Id", nullable = false)
     @ManyToOne(optional = false)
-    private TableOrder orderId;
+    private ShoppingOrder orderId;
 
     public OrderDetails() {
     }
@@ -95,11 +94,11 @@ public class OrderDetails implements Serializable {
         this.bookId = bookId;
     }
 
-    public TableOrder getOrderId() {
+    public ShoppingOrder getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(TableOrder orderId) {
+    public void setOrderId(ShoppingOrder orderId) {
         this.orderId = orderId;
     }
 

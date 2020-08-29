@@ -3,12 +3,13 @@
   <persistence-unit name="BookStorePU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.Category</class>
-    <class>entity.TableOrder</class>
     <class>entity.Discount</class>
     <class>entity.Book</class>
     <class>entity.OrderDetails</class>
     <class>entity.PaymentMethod</class>
     <class>entity.UserAccount</class>
+    <class>entity.TblOrder</class>
+    <class>entity.ShoppingOrder</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost\.:1433;databaseName=BookStore"/>

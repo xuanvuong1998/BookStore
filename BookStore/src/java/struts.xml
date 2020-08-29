@@ -46,5 +46,10 @@
         <action name="updateCart" class="action.UpdateCartAction">
             <result>viewCart.jsp</result>
         </action>
+        
+        <action name="confirmCart" class="action.ConfirmCartAction">
+            <result name="success">viewCart.jsp</result>
+            <result name="fail">login.jsp</result>
+        </action>
     </package>
 </struts>

@@ -7,22 +7,16 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author TiTi
- */
+
 @Entity
 @Table(name = "PaymentMethod", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
@@ -40,8 +34,6 @@ public class PaymentMethod implements Serializable {
     @Basic(optional = false)
     @Column(name = "Name", nullable = false, length = 100)
     private String name;
-    @OneToMany(mappedBy = "paymentMethodId")
-    private Collection<TableOrder> tableOrderCollection;
 
     public PaymentMethod() {
     }
@@ -69,15 +61,6 @@ public class PaymentMethod implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @XmlTransient
-    public Collection<TableOrder> getTableOrderCollection() {
-        return tableOrderCollection;
-    }
-
-    public void setTableOrderCollection(Collection<TableOrder> tableOrderCollection) {
-        this.tableOrderCollection = tableOrderCollection;
     }
 
     @Override
