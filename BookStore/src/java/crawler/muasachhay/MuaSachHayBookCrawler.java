@@ -35,16 +35,17 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
 
     private String pageUrl;
     private Category category;
-    private List<String> authorTexts;
+    private List<String> authorLabels;
 
     public MuaSachHayBookCrawler(ServletContext context, String pageUrl, Category category) {
         super(context);
         this.pageUrl = pageUrl;
         this.category = category;
-        this.authorTexts = new ArrayList<>();
-        this.authorTexts.add("Tác giả");
-        this.authorTexts.add("Dịch giả");
-        this.authorTexts.add("Tòa soạn");
+        this.authorLabels = new ArrayList<>();
+        this.authorLabels.add("Tác giả");
+        this.authorLabels.add("Dịch giả");
+        this.authorLabels.add("Tòa soạn");
+        this.authorLabels.add("Biên soạn");
     }
 
     public Book getBook() {
@@ -54,7 +55,8 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
             reader = getBufferedReaderForUrl(pageUrl);
             String document = getBookDocument(reader);
             return stAXParserForBook(document);
-        } catch (IOException | XMLStreamException ex) {
+        } catch (IOException | XMLStreamException | RuntimeException ex) {
+            System.out.println("ERROR: " + pageUrl);
             Logger.getLogger(MuaSachHayBookCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return book;
@@ -81,7 +83,10 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
         boolean isTableDisplay = isInfoDisplayInTable(eventReader);
 
         String author = getAuthor(eventReader, isTableDisplay);
-        Integer numOfPages = getNumOfPages(eventReader, isTableDisplay);
+        Integer numOfPages = 0;
+        if (author != null) {
+            numOfPages = getNumOfPages(eventReader, isTableDisplay);
+        }
         Integer price = getPrice(eventReader);
         String link = pageUrl;
         int quantity = 100;
@@ -161,14 +166,16 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
             if (!isTable) {
-                while (!event.isCharacters()) {
-                    event = (XMLEvent) eventReader.next();
-                }
-                Characters chars = event.asCharacters();
-                String text = chars.getData();
-                if (isAuthorText(text)) {
-                    author = text.split(":")[1].trim();
-                    return author;
+                if (event.isCharacters()) {
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+                    String authorLabel = getAuthorLabel(text);
+                    if (authorLabel != null) {
+                        text = text.replace(":", "");
+                        text = text.replace(authorLabel, "");
+                        author = text.trim();
+                        return author;
+                    }
                 }
             } else {
                 while (!event.isStartElement()) {
@@ -180,7 +187,8 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
                     if (event.isCharacters()) {
                         Characters chars = event.asCharacters();
                         String text = chars.getData();
-                        if (isAuthorText(text)) {
+                        String authorLabel = getAuthorLabel(text);
+                        if (authorLabel != null) {
                             eventReader.next();
                             eventReader.next();
                             event = (XMLEvent) eventReader.next();
@@ -191,10 +199,17 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
                     }
                 }
             }
+
+            if (event.isEndElement()) {
+                EndElement endElement = event.asEndElement();
+                if (ElementChecker.isElementWith(endElement, "div")) {
+                    return null; // author not found
+                }
+            }
         }
         return author;
     }
-    
+
     private String getBookImageSource(XMLEventReader eventReader) {
         XMLEvent event;
         String src = null;
@@ -248,7 +263,7 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
                     }
                 }
             }
-            
+
             if (event.isEndElement()) {
                 EndElement endElement = event.asEndElement();
                 if (ElementChecker.isElementWith(endElement, "div")) {
@@ -280,11 +295,13 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
         }
         return numOfPages;
     }
-    
-    private boolean isAuthorText(String text) {
-        if (authorTexts.stream().anyMatch((authorText) -> (text.contains(authorText)))) {
-            return true;
+
+    private String getAuthorLabel(String text) {
+        for (String authorLabel : authorLabels) {
+            if (text.contains(authorLabel)) {
+                return authorLabel;
+            }
         }
-        return false;
+        return null;
     }
 }

@@ -70,7 +70,6 @@ public class MuaSachHayCategoryPageCrawler extends BaseCrawler implements Runnab
                 Thread modelListCrawler = new Thread(
                         new MuaSachHayBookListCrawler(getContext(), categoryPageUrl, category));
                 modelListCrawler.start();
-                if (true) break;
 
                 if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
                     modelListCrawler.join();
