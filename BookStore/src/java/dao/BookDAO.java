@@ -13,9 +13,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import utils.DBUtils;
 
-public class BookDAO {
+public class BookDAO extends BaseDAO<Book, String>{
+    
+    private BookDAO() {
+    }
+    
+    private static BookDAO instance;
+    private static final Object LOCK = new Object();
+    
+    public static BookDAO getInstance() {
+        synchronized (LOCK) {
+            if (instance == null) {
+                instance = new BookDAO();
+            }
+        }
+        return instance;
+    }
 
-    public List<Book> getBooks(String name, float minPrice, float maxPrice) {
+    public synchronized List<Book> getBooks(String name, float minPrice, float maxPrice) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -41,7 +56,7 @@ public class BookDAO {
         return null;
     }
     
-    public List<Book> getAllBooks(String name, float minPrice, float maxPrice) {
+    public synchronized List<Book> getAllBooks(String name, float minPrice, float maxPrice) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -67,7 +82,7 @@ public class BookDAO {
         return null;
     }
 
-    public Book getBookById(int id) {
+    public synchronized Book getBookById(int id) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -92,7 +107,7 @@ public class BookDAO {
         return null;
     }
 
-    public Book updateBook(Book book) {
+    public synchronized Book updateBook(Book book) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -114,7 +129,7 @@ public class BookDAO {
         return null;
     }
 
-    public Book createBook(Book book) {
+    public synchronized Book createBook(Book book) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();

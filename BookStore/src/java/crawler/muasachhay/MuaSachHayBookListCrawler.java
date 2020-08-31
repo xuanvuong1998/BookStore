@@ -8,6 +8,8 @@ package crawler.muasachhay;
 import constants.ConfigConstants;
 import crawler.BaseCrawler;
 import crawler.BaseThread;
+import dao.BookDAO;
+import entity.Book;
 import entity.Category;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,15 +25,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import utils.ElementChecker;
 import utils.TextUtils;
 
-public class MuaSachHayModelListCrawler extends BaseCrawler implements Runnable {
+public class MuaSachHayBookListCrawler extends BaseCrawler implements Runnable {
 
     private String pageUrl;
     private Category category;
 
-    public MuaSachHayModelListCrawler(ServletContext context, String pageUrl,
+    public MuaSachHayBookListCrawler(ServletContext context, String pageUrl,
             Category category) {
         super(context);
         this.pageUrl = pageUrl;
@@ -54,29 +55,28 @@ public class MuaSachHayModelListCrawler extends BaseCrawler implements Runnable 
             List<String> bookLinks = getBookLinks(document);
 
             for (String modelLink : bookLinks) {
-                System.out.println("LINK: " + modelLink);
-                break;
-//                Kit168ModelCrawler modelCrawler
-//                        = new Kit168ModelCrawler(getContext(), modelLink, category);
-//
-//                Model model = modelCrawler.getModel();
-//                if (model == null) {
+                MuaSachHayBookCrawler bookCrawler
+                        = new MuaSachHayBookCrawler(getContext(), modelLink, category);
+
+                Book book = bookCrawler.getBook();
+                if (true) break;
+//                if (book == null) {
 //                    continue;
 //                }
-//                ModelDAO.getInstance().saveModelWhileCrawling(getContext(), model);
+//                BookDAO.getInstance().saveModelWhileCrawling(getContext(), book);
 //
 //                if (ConfigConstants.DEBUG) {
-//                    System.out.println("DEBUG saved model " + model.getLink());
+//                    System.out.println("DEBUG saved model " + book.getLink());
 //                }
 
-//                synchronized (BaseThread.getInstance()) {
-//                    while (BaseThread.isSuspended()) {
-//                        BaseThread.getInstance().wait();
-//                    }
-//                }
+                synchronized (BaseThread.getInstance()) {
+                    while (BaseThread.isSuspended()) {
+                        BaseThread.getInstance().wait();
+                    }
+                }
             }
-        } catch (IOException | XMLStreamException ex) {
-            Logger.getLogger(MuaSachHayModelListCrawler.class.getName())
+        } catch (IOException | XMLStreamException | InterruptedException ex) {
+            Logger.getLogger(MuaSachHayBookListCrawler.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
     }

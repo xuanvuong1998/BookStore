@@ -16,7 +16,7 @@ public class BookService {
     private BookDAO bookDao;
 
     public BookService() {
-        this.bookDao = new BookDAO();
+        this.bookDao = BookDAO.getInstance();
     }
 
     public List<Book> getBooks(String name, float minPrice, float maxPrice) {

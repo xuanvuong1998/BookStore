@@ -68,7 +68,7 @@ public class MuaSachHayCategoryPageCrawler extends BaseCrawler implements Runnab
                 String categoryPageUrl = pageUrl + "page/" + i;
                 System.out.println("PAGE URL: " + categoryPageUrl);
                 Thread modelListCrawler = new Thread(
-                        new MuaSachHayModelListCrawler(getContext(), categoryPageUrl, category));
+                        new MuaSachHayBookListCrawler(getContext(), categoryPageUrl, category));
                 modelListCrawler.start();
                 if (true) break;
 

@@ -75,7 +75,7 @@ public class CartService {
     }
     
     public boolean confirmBook(OrderDetails detail) {
-        BookDAO bookDao = new BookDAO();
+        BookDAO bookDao = BookDAO.getInstance();
         int bookId = detail.getBookId().getId();
         Book book = bookDao.getBookById(bookId);
         
@@ -97,7 +97,7 @@ public class CartService {
         
         if (order != null) {
             // change products amount
-            BookDAO bookDao = new BookDAO();
+            BookDAO bookDao = BookDAO.getInstance();
             for (OrderDetails detail : cart.getOrderDetailsCollection()) {
                 Book dbBook = bookDao.getBookById(detail.getBookId().getId());
                 

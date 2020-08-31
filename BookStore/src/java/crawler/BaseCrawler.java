@@ -40,7 +40,7 @@ public class BaseCrawler {
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         
-        String userAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.180 Mobile Safari/537.36";
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) coc_coc_browser/89.0.124 Chrome/83.0.4103.124 Safari/537.36";
         
         connection.addRequestProperty("User-Agent", userAgent);
         InputStream is = connection.getInputStream();

@@ -39,6 +39,7 @@ public class MuaSachHayThread extends BaseThread implements Runnable {
                     Thread pageCrawlingThread = new Thread(
                         new MuaSachHayCategoryPageCrawler(context, entry.getKey(), entry.getValue()));
                     pageCrawlingThread.start();
+                    if (true) break;
                     
                     if (ConfigConstants.DEBUG) {
                         System.out.println("DEBUG MuaSachHay Id = " + pageCrawlingThread.getId()

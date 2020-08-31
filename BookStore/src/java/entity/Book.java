@@ -44,6 +44,18 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Book.findByIsActive", query = "SELECT b FROM Book b WHERE b.isActive = :isActive")})
 public class Book implements Serializable {
 
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "Price", precision = 53)
+    private Double price;
+    @Column(name = "Quantity")
+    private Integer quantity;
+    @Column(name = "ISBN", length = 100)
+    private String isbn;
+    @Column(name = "NumOfPages")
+    private Integer numOfPages;
+    @Column(name = "Link", length = 500)
+    private String link;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
     private Collection<OrderDetails> orderDetailsCollection;
 
@@ -60,17 +72,11 @@ public class Book implements Serializable {
     private String image;
     @Column(name = "Description", length = 2147483647)
     private String description;
-    @Basic(optional = false)
-    @Column(name = "Price", nullable = false)
-    private double price;
     @Column(name = "Author", length = 200)
     private String author;
     @Column(name = "ImportDate")
     @Temporal(TemporalType.DATE)
     private Date importDate;
-    @Basic(optional = false)
-    @Column(name = "Quantity", nullable = false)
-    private int quantity;
     @Basic(optional = false)
     @Column(name = "IsActive", nullable = false)
     private boolean isActive;
@@ -85,12 +91,34 @@ public class Book implements Serializable {
         this.id = id;
     }
 
-    public Book(Integer id, String name, double price, int quantity, boolean isActive) {
-        this.id = id;
-        this.name = name;
+    public Book(
+            Integer id,
+            String name,
+            Double price,
+            String author,
+            String image,
+            Integer quantity,
+            String isbn,
+            Integer numOfPages,
+            String link,
+            String description,
+            Date importDate,
+            boolean isActive,
+            Category categoryId
+    ) {
         this.price = price;
         this.quantity = quantity;
+        this.isbn = isbn;
+        this.numOfPages = numOfPages;
+        this.link = link;
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.author = author;
+        this.importDate = importDate;
         this.isActive = isActive;
+        this.categoryId = categoryId;
     }
 
     public Integer getId() {
@@ -125,14 +153,6 @@ public class Book implements Serializable {
         this.description = description;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -147,14 +167,6 @@ public class Book implements Serializable {
 
     public void setImportDate(Date importDate) {
         this.importDate = importDate;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public boolean getIsActive() {
@@ -205,6 +217,46 @@ public class Book implements Serializable {
 
     public void setOrderDetailsCollection(Collection<OrderDetails> orderDetailsCollection) {
         this.orderDetailsCollection = orderDetailsCollection;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public Integer getNumOfPages() {
+        return numOfPages;
+    }
+
+    public void setNumOfPages(Integer numOfPages) {
+        this.numOfPages = numOfPages;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
 }
