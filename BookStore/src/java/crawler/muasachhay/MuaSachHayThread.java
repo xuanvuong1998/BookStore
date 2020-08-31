@@ -30,28 +30,28 @@ public class MuaSachHayThread extends BaseThread implements Runnable {
                 MuaSachHayCategoryCrawler categoryCrawler = new MuaSachHayCategoryCrawler(context);
                 Map<String, String> categories = categoryCrawler.getCategories(URL);
                 
-                System.out.println("CATEGORIES: ");
-                for (Map.Entry<String, String> cat: categories.entrySet()) {
-                    System.out.println(cat.getValue() + ": " + cat.getKey());
+//                System.out.println("CATEGORIES: ");
+//                for (Map.Entry<String, String> cat: categories.entrySet()) {
+//                    System.out.println(cat.getValue() + ": " + cat.getKey());
+//                }
+                
+                for (Map.Entry<String, String> entry : categories.entrySet()) {
+                    Thread pageCrawlingThread = new Thread(
+                        new MuaSachHayCategoryPageCrawler(context, entry.getKey(), entry.getValue()));
+                    pageCrawlingThread.start();
+                    
+                    if (ConfigConstants.DEBUG) {
+                        System.out.println("DEBUG MuaSachHay Id = " + pageCrawlingThread.getId()
+                            + "(name, link) = " + entry.getKey() + ", " + entry.getValue());
+                    }
+                    
+                    synchronized (BaseThread.getInstance()) {
+                        while (BaseThread.isSuspended()) {
+                            BaseThread.getInstance().wait();
+                        }
+                    }
                 }
                 
-//                for (Map.Entry<String, String> entry : categories.entrySet()) {
-//                    Thread pageCrawlingThread = new Thread(
-//                        new Kit168CategoryPageCrawler(context, entry.getKey(), entry.getValue()));
-//                    pageCrawlingThread.start();
-//                    
-//                    if (ConfigConstants.DEBUG) {
-//                        System.out.println("DEBUG Kit168 Id = " + pageCrawlingThread.getId()
-//                            + "(name, link) = " + entry.getKey() + ", " + entry.getValue());
-//                    }
-//                    
-//                    synchronized (BaseThread.getInstance()) {
-//                        while (BaseThread.isSuspended()) {
-//                            BaseThread.getInstance().wait();
-//                        }
-//                    }
-//                }
-//                
                 MuaSachHayThread.sleep(ConfigConstants.CRAWLING_INTERVAL);
                 synchronized (BaseThread.getInstance()) {
                     while (BaseThread.isSuspended()) {

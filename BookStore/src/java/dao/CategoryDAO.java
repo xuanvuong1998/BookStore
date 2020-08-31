@@ -13,13 +13,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import utils.DBUtils;
 
-/**
- *
- * @author TiTi
- */
-public class CategoryDAO {
+public class CategoryDAO extends BaseDAO<Category, String>{
+    
+    private CategoryDAO() {
+    }
+    
+    private static CategoryDAO instance;
+    private static final Object LOCK = new Object();
+    
+    public static CategoryDAO getInstance() {
+        synchronized (LOCK) {
+            if (instance == null) {
+                instance = new CategoryDAO();
+            }
+        }
+        return instance;
+    }
 
-    public List<Category> getAllCategories() {
+    public synchronized List<Category> getAllCategories() {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -42,7 +53,7 @@ public class CategoryDAO {
         return null;
     }
 
-    public Category getCategory(int id) {
+    public synchronized Category getCategory(int id) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -64,6 +75,25 @@ public class CategoryDAO {
             }
         }
 
+        return null;
+    }  
+    
+     public synchronized Category getFirstCategory(String name) {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            List<Category> result = em.createNamedQuery("Category.findByName", Category.class)
+                    .setParameter("name", name)
+                    .getResultList();
+            if (result != null && !result.isEmpty()) {
+                return result.get(0);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
         return null;
     }
 }
