@@ -32,4 +32,9 @@ public class ConfigConstants {
      * maximum number of related models suggested for a specific model
      */
     public static final int MAX_RELATED_MODELS = 18*3;
+     
+    /**
+     * maximum crawl page of a category
+     */
+    public static final int CRAWL_PAGE_THRESHOLD = 50;
 }

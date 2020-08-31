@@ -5,6 +5,7 @@
  */
 package crawler.muasachhay;
 
+import constants.ConfigConstants;
 import crawler.BaseCrawler;
 import crawler.BaseThread;
 import dao.CategoryDAO;
@@ -19,6 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import utils.ElementChecker;
@@ -59,23 +61,26 @@ public class MuaSachHayCategoryPageCrawler extends BaseCrawler implements Runnab
             }
 
             int lastPage = getLastPage(document);
+            lastPage = lastPage > ConfigConstants.CRAWL_PAGE_THRESHOLD 
+                    ? ConfigConstants.CRAWL_PAGE_THRESHOLD : lastPage;
 
             for (int i = 1; i <= lastPage; ++i) {
                 String categoryPageUrl = pageUrl + "page/" + i;
                 System.out.println("PAGE URL: " + categoryPageUrl);
-//                Thread modelListCrawler = new Thread(
-//                        new Kit168ModelListCrawler(getContext(), categoryPageUrl, category));
-//                modelListCrawler.start();
-//
-//                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
-//                    modelListCrawler.join();
-//                }
-//
-//                synchronized (BaseThread.getInstance()) {
-//                    while (BaseThread.isSuspended()) {
-//                        BaseThread.getInstance().wait();
-//                    }
-//                }
+                Thread modelListCrawler = new Thread(
+                        new MuaSachHayModelListCrawler(getContext(), categoryPageUrl, category));
+                modelListCrawler.start();
+                if (true) break;
+
+                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
+                    modelListCrawler.join();
+                }
+
+                synchronized (BaseThread.getInstance()) {
+                    while (BaseThread.isSuspended()) {
+                        BaseThread.getInstance().wait();
+                    }
+                }
             }
         } catch (IOException | InterruptedException
                 | XMLStreamException | NumberFormatException ex) {
@@ -89,13 +94,13 @@ public class MuaSachHayCategoryPageCrawler extends BaseCrawler implements Runnab
         String document = "";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            if (!isStart && line.contains("<nav class=\"page-navigation\">")) {
+            if (!isStart && line.contains("<ul class='page-numbers'>")) {
                 isStart = true;
             }
             if (isStart) {
                 document += line.trim();
             }
-            if (isStart && line.contains("</nav>")) {
+            if (isStart && line.contains("</ul>")) {
                 break;
             }
         }
@@ -106,25 +111,22 @@ public class MuaSachHayCategoryPageCrawler extends BaseCrawler implements Runnab
             throws UnsupportedEncodingException, XMLStreamException, NumberFormatException {
         document = document.trim();
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
+        int lastPage = 1;
         while (eventReader.hasNext()) {
             XMLEvent event = (XMLEvent) eventReader.next();
 
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
 
-                if (ElementChecker.isElementWith(startElement, "li", "class", "bpn-last-page-link")) {
+                if (ElementChecker.isElementWith(startElement, "a", "class", "page-numbers")) {
                     event = (XMLEvent) eventReader.next();
-                    startElement = event.asStartElement();
-
-                    String href = getHref(startElement);
-                    String[] hrefTokens = href.split("/");
-                    String pageStr = hrefTokens[hrefTokens.length - 1];
-
-                    return Integer.parseInt(pageStr);
+                    Characters chars = event.asCharacters();
+                    String pageStr = chars.getData();
+                    lastPage = Integer.parseInt(pageStr);
                 }
             }
         }
-        return 1;
+        return lastPage;
     }
 
     private static final Object LOCK = new Object();
