@@ -6,9 +6,6 @@
 package listener;
 
 import crawler.muasachhay.MuaSachHayThread;
-import dao.BookDAO;
-import entity.Book;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -26,13 +23,6 @@ public class BookStoreAppListener implements ServletContextListener {
 
         realPath = context.getRealPath("/");
 
-//        List<Book> models = getAllModels();
-//        context.setAttribute("MODELS", models);
-//        context.setAttribute("CACHE_TIME", System.currentTimeMillis());
-//        if (models != null) {
-//            System.out.println("INFO models cached with " + models.size() + " models at " + System.currentTimeMillis());
-//        }
-
         muaSachHayThread = new MuaSachHayThread(context);
         muaSachHayThread.start();
 
@@ -46,9 +36,4 @@ public class BookStoreAppListener implements ServletContextListener {
             em.close();
         }
     }
-    
-//    private List<Book> getAllModels() {
-//        BookDAO bookDao = BookDAO.getInstance();
-//        return bookDao.getAllModels();
-//    }
 }
