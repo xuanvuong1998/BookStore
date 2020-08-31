@@ -4,6 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>View Cart Page</title>
         <style>
             th, td {
@@ -12,19 +13,30 @@
         </style>
     </head>
     <body>
-        <s:if test="#session.USER != null">
-            <h3 style="color: orangered">Welcome, <s:property value="#session.USER.fullname"/>!</h3>
-            <s:a href="logout">Logout</s:a>
-        </s:if>
-        <s:else>
-            <s:a href="login.jsp" >Login</s:a>
-        </s:else>
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <a style="color: blue" >Welcome, <s:property value="#session.USER.fullname"/></a>
+                    </li>
 
-        <s:a href="searchBook">
-            <h4>Home</h4>
-        </s:a>
+                </s:if>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <s:a href="logout" cssStyle="color: red">Logout</s:a>
+                        </li>
+                </s:if>
+            </ul>
 
-        <h1>View Cart</h1>
+            <ul class="nav navbar-nav">
+                <li>
+                    <s:a href="searchBook">Home</s:a>
+                    </li>
+                </ul>
+            </div>
+            <h1>Your Cart</h1>
 
         <s:if test="#session.CART == null || #session.CART.isEmpty()">
             <h3>Your cart is empty.</h3>
@@ -36,7 +48,7 @@
             </s:if>  
             <s:else>
                 <s:set var="totalPrice" value="%{0}"/>
-                <p><em>There are <strong>${details.size()} books</strong> in your cart.</em></p>
+                <p><em>There are <strong>${details.size()} book(s)</strong> in your cart.</em></p>
                 <table border="1">
                     <thead>
                         <tr>
@@ -94,39 +106,53 @@
 
                                 <s:set var="totalPrice" value="%{#totalPrice + price * quantity}"/>
                             </s:form>
-                        </s:iterator>
+                        </s:iterator>                                    
                     </tbody>
                 </table>
+                <h1><em>Total price: <strong><s:number name="#totalPrice" currency="vnd"/> vnd</strong></em></h1>
 
-                <p><em>Total price: <strong><s:number name="#totalPrice" currency="vnd"/> vnd</strong></em></p>
-
-                <s:form action="confirmCart" method="POST">
-                    <s:select label="Payment method" 
-                              list="#session.PAYMENT_METHODS" 
-                              listKey="id"
-                              listValue="name"
-                              name="paymentMethodId"
-                              />
-                    <s:if test="%{!#session.DISCOUNTS.isEmpty()}">
-                        <s:select label="Discount"
-                                  list="#session.DISCOUNTS"
-                                  listKey="id"
-                                  listValue="discountDisplayLabel"
-                                  name="discountId"
-                                  />
-                    </s:if>
-                    <s:submit value="Confirm"/>
-                </s:form>
+                <table border="1">
+                    <s:form action="confirmCart" method="POST">
+                        <tbody>
+                            <tr>
+                                <td>Payment method: </td>
+                                <td>
+                                    <s:select label="Payment method" 
+                                              list="#session.PAYMENT_METHODS" 
+                                              listKey="id"
+                                              listValue="name"
+                                              name="paymentMethodId"
+                                              />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Discount code: </td>
+                                <td>
+                                    <s:if test="%{!#session.DISCOUNTS.isEmpty()}">
+                                        <s:select label="Discount"
+                                                  list="#session.DISCOUNTS"
+                                                  listKey="id"
+                                                  listValue="discountDisplayLabel"
+                                                  name="discountId"
+                                                  />
+                                    </s:if>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <s:submit value="Confirm"/>
+                    </s:form>
+                </table>
+                
             </s:else>
         </s:else>
 
         <s:if test="message != null && !message.isEmpty()">
-            <h3 style="color: teal"><em>${message}</em></h3>
+            <h3 style="color: red"><em>${message}</em></h3>
                 </s:if>
 
         <script>
             function confirmIfDelete(productName) {
-                return confirm('You you want to delete ' + productName + '?');
+                return confirm('Do you want to delete ' + productName + ' from Cart?');
             }
         </script>
     </body>

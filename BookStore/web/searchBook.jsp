@@ -4,6 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>Search Book Page</title>
         <style>
             th, td {
@@ -12,44 +13,99 @@
         </style>
     </head>
     <body>
-        <s:if test="#session.USER != null">
-            <h3 style="color: orangered">Welcome, <s:property value="#session.USER.fullname"/>!</h3>
-            <s:a href="logout">Logout</s:a>
-        </s:if>
-        <s:else>
-            <s:a href="login.jsp" >Login</s:a>
-        </s:else>
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <a style="color: blue" >Welcome, <s:property value="#session.USER.fullname"/></a>
+                    </li>
 
-        <h1>Search Book</h1>
+                </s:if>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <s:a href="logout" cssStyle="color: red">Logout</s:a>
+                        </li>
+                </s:if>
+            </ul>
 
-        <s:form action="searchBook">
-            <s:textfield name="bookName" label="Book name" cssStyle="text-align: center"/>
-            <s:textfield name="categoryName" label="Category name" cssStyle="text-align: center"/>
-            <s:textfield name="minPrice" label="Min price (vnd)" cssStyle="text-align: right" type="number" min="0"/>
-            <s:textfield name="maxPrice" label="Max price (vnd)" cssStyle="text-align: right" type="number" min="0"/>
-            <s:submit value="Search"/>
-        </s:form>
-
-        <s:if test="#session.USER != null && #session.USER.isAdmin">
-            <s:a href="createBook.jsp">Create new book</s:a>
-            <br/>
-            <s:a href="createDiscount.jsp">Create new discount</s:a>
-        </s:if>
-        <s:else>
-            <s:a href="viewCart.jsp">View cart</s:a>
-            <s:if test="#session.USER != null && !#session.USER.isAdmin">
-                <s:a href="orderHistory" cssStyle="margin-left: 20px">View shopping history</s:a>
+            <s:else>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <s:a href="login.jsp">Login</s:a>
+                        </li>
+                    </ul>
+            </s:else>
+            <s:if test="#session.USER != null && #session.USER.isAdmin">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <s:a href="createBook.jsp">Create new book</s:a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>
+                        <s:a href="createDiscount.jsp">Create new discount</s:a>
+                        </li>
+                    </ul>
             </s:if>
-        </s:else>
+            <s:else>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <s:a href="viewCart.jsp">View cart</s:a>
+                        </li>
+                    </ul>
+                <s:if test="#session.USER != null && !#session.USER.isAdmin">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <s:a href="orderHistory" cssStyle="margin-left: 20px">View shopping history</s:a>
+                            </li>
+                        </ul>
+                </s:if>
+            </s:else>
+        </div>
+
+        <h1>Book Store</h1>
+        <table border="1">
+            <s:form action="searchBook">
+                <tbody>
+                    <tr>
+                        <td>By Name: </td>
+                        <td>
+                            <s:textfield name="bookName" label="Book name" cssStyle="text-align: center"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>By Category: </td>
+                        <td>
+                            <s:textfield name="categoryName" label="Category name" cssStyle="text-align: center"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Min Price: </td>
+                        <td>
+                            <s:textfield name="minPrice" label="Min price (vnd)" cssStyle="text-align: right" type="number" min="0"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Max Price: </td>
+                        <td>
+                            <s:textfield name="maxPrice" label="Max price (vnd)" cssStyle="text-align: right" type="number" min="0"/>
+                        </td>
+                    </tr>
+                </tbody>
+                <s:submit value="Search"/>
+            </s:form>
+        </table>
 
         <s:if test="message != null && !message.isEmpty()">
-            <h4 style="color: greenyellow">
+            <h4 style="color: green">
                 <em>${message}</em>
             </h4>
         </s:if>
 
         <s:if test="books != null && !books.isEmpty()">
-            <h4><em>Found ${booksCount} books</em></h4>
+            <h4><em>Found ${booksCount} book(s)</em></h4>
             <table border="1">
                 <thead>
                     <tr>
@@ -182,7 +238,7 @@
                                         <s:select name="isActive" 
                                                   list="#{'true':'Yes', 'false':'No'}"
                                                   value="isActive"/>
-                                        
+
                                     </td>
                                 </s:if>
 

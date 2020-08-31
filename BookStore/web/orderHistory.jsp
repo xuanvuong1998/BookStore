@@ -4,6 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>Order History Page</title>
         <style>
             th, td {
@@ -12,32 +13,61 @@
         </style>
     </head>
     <body>
-        <s:if test="#session.USER != null">
-            <h3 style="color: orangered">Welcome, <s:property value="#session.USER.fullname"/>!</h3>
-            <s:a href="logout">Logout</s:a>
-        </s:if>
-        <s:else>
-            <s:a href="login.jsp" >Login</s:a>
-        </s:else>
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <a style="color: blue" >Welcome, <s:property value="#session.USER.fullname"/></a>
+                    </li>
 
-        <s:a href="searchBook">
-            <h4>Home</h4>
-        </s:a>
+                </s:if>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <s:if test="#session.USER != null">
+                    <li>
+                        <s:a href="logout" cssStyle="color: red">Logout</s:a>
+                        </li>
+                </s:if>
+            </ul>
 
-        <h1>Order History</h1>
+            <ul class="nav navbar-nav">
+                <li>
+                    <s:a href="searchBook">Home</s:a>
+                    </li>
+                </ul>
+            </div>
 
-        <s:form action="orderHistory" method="POST">
-            <s:textfield name="bookName" label="Book name"/>
-            <s:textfield name="fromDateStr" label="From date" type="date"/>
-            <s:textfield name="toDateStr" label="To date" type="date"/>
-            <s:submit value="Search"/>
-        </s:form>
-
+            <h1>Order History</h1>
+            <table border="1">
+            <s:form action="orderHistory" method="POST">
+                <tbody>
+                    <tr>
+                        <td>Book name: </td>
+                        <td>
+                            <s:textfield name="bookName" label="Book name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>From date: </td>
+                        <td>
+                            <s:textfield name="fromDateStr" label="From date" type="date"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>To date: </td>
+                        <td>
+                            <s:textfield name="toDateStr" label="To date" type="date"/>
+                        </td>
+                    </tr>
+                </tbody>
+                <s:submit value="Search"/>
+            </s:form>
+        </table>
         <s:if test="orders == null || orders.isEmpty()">
             <h3>Your shopping history is empty.</h3>
         </s:if>
         <s:else>
-            <p><em>There are <strong>${orders.size()} orders</strong> in your history.</em></p>
+            <p><em>We found <strong>${orders.size()} order(s)</strong> in your history orders.</em></p>
             <s:iterator value="orders" var="order">
                 <strong>Order #<s:property value="id"/></strong>
                 <br/>
@@ -84,24 +114,32 @@
                                         <s:number name="#total" currency="vnd"/> vnd
                                     </td>
                                 </tr>
-
                                 <s:set var="totalPrice" value="%{#totalPrice + price * quantity}"/>
                             </s:form>
                         </s:iterator>
                     </tbody>
                 </table>
                 <s:if test="discountId != null">
-                    <p>
-                        <em>Discount code: <strong><s:text name="%{discountId.discountCode}"/></strong></em>
-                        <br/>
-                        <em>Discount percent: <strong><s:number name="%{discountId.discountPercent}"/>%</strong></em>
-                        <s:set var="totalPrice" value="%{#totalPrice * (100 - discountId.discountPercent) / 100}" />
-                    </p>
-                </s:if>
-                <p><em>Total price: <strong><s:number name="#totalPrice" currency="vnd"/> vnd</strong></em></p>
-
-                <br/>
-            </s:iterator>
-        </s:else>
-    </body>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Discount code</th>
+                                <th>Discount percent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <td>
+                            <strong><s:text name="%{discountId.discountCode}"/></strong>
+                        </td>
+                        <td>
+                            <strong><s:number name="%{discountId.discountPercent}"/>%</strong>
+                            <s:set var="totalPrice" value="%{#totalPrice * (100 - discountId.discountPercent) / 100}" />
+                        </td>
+                    </tbody>
+                </table>
+            </s:if>
+            Final price: <strong><s:number name="#totalPrice" currency="vnd"/> vnd</strong> <br/> 
+        </s:iterator>
+    </s:else>
+</body>
 </html>

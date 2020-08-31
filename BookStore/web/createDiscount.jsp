@@ -4,36 +4,73 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>Create Book Page</title>
     </head>
     <body>
-        <s:if test="#session.USER != null">
-            <h3 style="color: orangered">Welcome, <s:property value="#session.USER.fullname"/>!</h3>
-            <s:a href="logout">Logout</s:a>
-        </s:if>
-        <s:else>
-            <s:a href="login.jsp" >Login</s:a>
-        </s:else>
+        <s:if test="#session.USER != null && #session.USER.isAdmin">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <s:if test="#session.USER != null">
+                        <li>
+                            <a style="color: blue" >Welcome, <s:property value="#session.USER.fullname"/></a>
+                        </li>
 
-        <h1>Create Discount</h1>
+                    </s:if>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <s:if test="#session.USER != null">
+                        <li>
+                            <s:a href="logout" cssStyle="color: red">Logout</s:a>
+                            </li>
+                    </s:if>
+                </ul>
 
-        <s:form method="POST" action="createDiscount">
-            <s:textfield name="discountCode" label="Discount code" required="required"/>
-            <s:textfield name="discountPercent" label="Discount percent (max: 100)" value="0" type="number" min="0" max="100" placeholder="%" cssStyle="text-align: right"/>
-            <s:select 
-                label="User"
-                list="#session.USERS" 
-                name="username" 
-                listKey="username"
-                listValue="fullname"/>
-            <s:submit value="Create Discount"/>
-            <s:reset value="Reset"/>
-        </s:form>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <s:a href="searchBook">Home</s:a>
+                        </li>
+                    </ul>
+                </div>
 
-        <s:if test="message != null && !message.isEmpty()">
-            <h3 style="color: greenyellow"><em>${message}</em></h3>
+                <h1>Create New Discount Code</h1>
+                <table border="1">
+
+                <s:form method="POST" action="createDiscount">
+                    <tbody>
+                        <tr>
+                            <td>Discount code: </td>
+                            <td>
+                                <s:textfield name="discountCode" label="Discount code" required="required"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Discount percent (max: 100)</td>
+                            <td>
+                                <s:textfield name="discountPercent" label="Discount percent (max: 100)" value="0" type="number" min="0" max="100" placeholder="%" cssStyle="text-align: right"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>For user: </td>
+                            <td>
+                                <s:select 
+                                    label="User"
+                                    list="#session.USERS" 
+                                    name="username" 
+                                    listKey="username"
+                                    listValue="fullname"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><s:submit value="Create Discount"/></td>
+                            <td><s:reset value="Reset"/></td>
+                        </tr>
+                    </tbody>
+                </s:form>
+            </table>
+            <s:if test="message != null && !message.isEmpty()">
+                <h3 style="color: greenyellow"><em>${message}</em></h3>
+                    </s:if>
                 </s:if>
-
-        <s:a href="''">Home</s:a>
     </body>
 </html>
