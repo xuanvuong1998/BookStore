@@ -41,5 +41,5 @@ public class ConfigConstants {
     /**
      * Toggle crawling
      */
-    public static final boolean ENABLE_CRAWLING = false;
+    public static final boolean ENABLE_CRAWLING = true;
 }
