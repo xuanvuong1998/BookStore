@@ -37,4 +37,9 @@ public class ConfigConstants {
      * maximum crawl page of a category
      */
     public static final int CRAWL_PAGE_THRESHOLD = 50;
+    
+    /**
+     * Toggle crawling
+     */
+    public static final boolean ENABLE_CRAWLING = false;
 }

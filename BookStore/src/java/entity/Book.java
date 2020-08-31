@@ -30,11 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "Book", catalog = "BookStore", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b")
+    @NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b ORDER BY b.clickCount DESC")
     , @NamedQuery(name = "Book.findById", query = "SELECT b FROM Book b WHERE b.id = :id")
     , @NamedQuery(name = "Book.findByName", query = "SELECT b FROM Book b WHERE b.name = :name")
-    , @NamedQuery(name = "Book.findByNameAndRangePriceActive", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.isActive = TRUE AND b.quantity > 0")
-    , @NamedQuery(name = "Book.findByNameAndRangePrice", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.quantity > 0")
+    , @NamedQuery(name = "Book.findByNameAndRangePriceActive", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.isActive = TRUE AND b.quantity > 0 ORDER BY b.clickCount DESC")
+    , @NamedQuery(name = "Book.findByNameAndRangePrice", query = "SELECT b FROM Book b WHERE b.name LIKE :name AND b.price >= :minPrice AND b.price <= :maxPrice AND b.quantity > 0 ORDER BY b.clickCount DESC")
     , @NamedQuery(name = "Book.findByImage", query = "SELECT b FROM Book b WHERE b.image = :image")
     , @NamedQuery(name = "Book.findByDescription", query = "SELECT b FROM Book b WHERE b.description = :description")
     , @NamedQuery(name = "Book.findByPrice", query = "SELECT b FROM Book b WHERE b.price = :price")
@@ -44,6 +44,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Book.findByQuantity", query = "SELECT b FROM Book b WHERE b.quantity = :quantity")
     , @NamedQuery(name = "Book.findByIsActive", query = "SELECT b FROM Book b WHERE b.isActive = :isActive")})
 public class Book implements Serializable {
+
+    @Column(name = "ClickCount")
+    private Integer clickCount;
 
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Price", precision = 53)
@@ -258,6 +261,14 @@ public class Book implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public Integer getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Integer clickCount) {
+        this.clickCount = clickCount;
     }
 
 }

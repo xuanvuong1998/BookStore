@@ -126,6 +126,7 @@
                             <s:if test="#session.USER != null && #session.USER.isAdmin">
                             <th>Is active</th>
                             </s:if>
+                        <th>Details</th>
                             <s:if test="#session.USER != null && #session.USER.isAdmin">
                             <th>Admin Action</th>
                             </s:if>
@@ -242,6 +243,13 @@
                                     </td>
                                 </s:if>
 
+                                <!-- Details -->
+                                <td style="text-align: right">
+                                    <s:a href="%{link}" onclick="increaseClickCount(%{id})">
+                                        Details
+                                    </s:a>
+                                </td>
+
                                 <!--Action-->
                                 <s:if test="#session.USER != null && #session.USER.isAdmin">
                                     <td style="text-align: center">
@@ -285,6 +293,22 @@
         <script>
             function confirmIfDelete(bookName) {
                 return confirm('You you want to delete ' + bookName + '?');
+            }
+
+            function increaseClickCount(bookId) {
+                const url = 'addToCart?bookId=' + bookId + '&isClickOnly=true';
+                // ajax
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.overrideMimeType('application/xml');
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        let xml = xhr.responseXML;
+                        console.log(xml);
+                    }
+                };
+
+                xhr.send(null);
             }
         </script>
     </body>

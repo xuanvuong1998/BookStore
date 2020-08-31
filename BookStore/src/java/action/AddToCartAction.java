@@ -17,6 +17,7 @@ public class AddToCartAction {
     private final String SUCCESS = "success";
     
     private int bookId;
+    private boolean isClickOnly;
     private String message;
     
     public AddToCartAction() {
@@ -28,6 +29,11 @@ public class AddToCartAction {
         
         BookService bookService = new BookService();
         Book book = bookService.getBook(bookId);
+        
+        if (isClickOnly) {
+            cartService.increaseClickCount(book);
+            return SUCCESS;
+        }
         
         OrderDetails item = new OrderDetails();
         item.setBookId(book);
@@ -69,6 +75,20 @@ public class AddToCartAction {
      */
     public void setBookId(int bookId) {
         this.bookId = bookId;
+    }
+
+    /**
+     * @return the isClickOnly
+     */
+    public boolean isIsClickOnly() {
+        return isClickOnly;
+    }
+
+    /**
+     * @param isClickOnly the isClickOnly to set
+     */
+    public void setIsClickOnly(boolean isClickOnly) {
+        this.isClickOnly = isClickOnly;
     }
     
 }

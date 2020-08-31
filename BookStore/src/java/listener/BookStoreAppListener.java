@@ -5,6 +5,7 @@
  */
 package listener;
 
+import constants.ConfigConstants;
 import crawler.muasachhay.MuaSachHayThread;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
@@ -23,8 +24,10 @@ public class BookStoreAppListener implements ServletContextListener {
 
         realPath = context.getRealPath("/");
 
-        muaSachHayThread = new MuaSachHayThread(context);
-        muaSachHayThread.start();
+        if (ConfigConstants.ENABLE_CRAWLING) {
+            muaSachHayThread = new MuaSachHayThread(context);
+            muaSachHayThread.start();
+        }
 
         context.setAttribute("MUASACHHAY_THREAD", muaSachHayThread);
     }

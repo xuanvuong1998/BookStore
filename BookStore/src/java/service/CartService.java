@@ -23,6 +23,8 @@ public class CartService {
     }
     
     public boolean addToCart(OrderDetails item) {
+        this.increaseClickCount(item.getBookId());
+        
         if (!this.ensureCartExist()) {
             return false;
         }
@@ -112,5 +114,14 @@ public class CartService {
         }
         
         return false;
+    }
+    
+    public void increaseClickCount(Book book) {
+        if (book.getClickCount() == null) {
+            book.setClickCount(0);
+        }
+        book.setClickCount(book.getClickCount() + 1);
+        BookDAO bookDAO = BookDAO.getInstance();
+        bookDAO.update(book);
     }
 }
