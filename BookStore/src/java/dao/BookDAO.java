@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.servlet.ServletContext;
 import utils.DBUtils;
 
 public class BookDAO extends BaseDAO<Book, String>{
@@ -106,6 +107,31 @@ public class BookDAO extends BaseDAO<Book, String>{
 
         return null;
     }
+    
+    public synchronized Book getBookByLink(String link) {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+
+            List<Book> books = em.createNamedQuery("Book.findByLink")
+                    .setParameter("link", link)
+                    .getResultList();
+
+            transaction.commit();
+            if (books != null && !books.isEmpty()) {
+                return books.get(0);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BookDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return null;
+    }
 
     public synchronized Book updateBook(Book book) {
         EntityManager em = DBUtils.getEntityManager();
@@ -149,5 +175,14 @@ public class BookDAO extends BaseDAO<Book, String>{
         }
 
         return null;
+    }
+    
+    public synchronized Book saveBookWhileCrawling(Book book) {
+        Book existedBook = getBookByLink(book.getLink());
+        if (existedBook == null) {
+            return create(book);
+        }
+        book.setId(existedBook.getId());
+        return update(book);
     }
 }

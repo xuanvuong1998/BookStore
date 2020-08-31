@@ -59,15 +59,15 @@ public class MuaSachHayBookListCrawler extends BaseCrawler implements Runnable {
                         = new MuaSachHayBookCrawler(getContext(), modelLink, category);
 
                 Book book = bookCrawler.getBook();
-                if (true) break;
-//                if (book == null) {
-//                    continue;
-//                }
-//                BookDAO.getInstance().saveModelWhileCrawling(getContext(), book);
-//
-//                if (ConfigConstants.DEBUG) {
-//                    System.out.println("DEBUG saved model " + book.getLink());
-//                }
+                
+                if (book == null) {
+                    continue;
+                }
+                BookDAO.getInstance().saveBookWhileCrawling(book);
+
+                if (ConfigConstants.DEBUG) {
+                    System.out.println("DEBUG saved model " + book.getLink());
+                }
 
                 synchronized (BaseThread.getInstance()) {
                     while (BaseThread.isSuspended()) {

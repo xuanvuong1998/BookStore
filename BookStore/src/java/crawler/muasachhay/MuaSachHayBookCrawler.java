@@ -13,7 +13,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -22,6 +24,7 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import utils.ElementChecker;
@@ -32,11 +35,16 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
 
     private String pageUrl;
     private Category category;
+    private List<String> authorTexts;
 
     public MuaSachHayBookCrawler(ServletContext context, String pageUrl, Category category) {
         super(context);
         this.pageUrl = pageUrl;
         this.category = category;
+        this.authorTexts = new ArrayList<>();
+        this.authorTexts.add("Tác giả");
+        this.authorTexts.add("Dịch giả");
+        this.authorTexts.add("Tòa soạn");
     }
 
     public Book getBook() {
@@ -152,44 +160,41 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
         XMLEvent event;
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
-            if (event.isStartElement()) {
+            if (!isTable) {
+                while (!event.isCharacters()) {
+                    event = (XMLEvent) eventReader.next();
+                }
+                Characters chars = event.asCharacters();
+                String text = chars.getData();
+                if (isAuthorText(text)) {
+                    author = text.split(":")[1].trim();
+                    return author;
+                }
+            } else {
+                while (!event.isStartElement()) {
+                    event = (XMLEvent) eventReader.next();
+                }
                 StartElement startElement = event.asStartElement();
-                String tagName = startElement.getName().getLocalPart();
-                if (!isTable) {
-                    if ("p".equals(tagName)) {
-                        event = (XMLEvent) eventReader.next();
-                        if (event.isCharacters()) {
-                            Characters chars = event.asCharacters();
-                            String text = chars.getData();
-                            if (text.contains("Tác giả")) {
-                                author = text.split(":")[1].trim();
-                                return author;
-                            }
-                        }
-                    }
-                } else {
-                    if ("td".equals(tagName)) {
-                        event = (XMLEvent) eventReader.next();
-                        if (event.isCharacters()) {
-                            Characters chars = event.asCharacters();
-                            String text = chars.getData();
-                            if (text.contains("Tác giả")) {
-                                eventReader.next();
-                                eventReader.next();
-                                event = (XMLEvent) eventReader.next();
-                                chars = event.asCharacters();
-                                author = chars.getData();
-                                return author;
-                            }
+                if (ElementChecker.isElementWith(startElement, "td")) {
+                    event = (XMLEvent) eventReader.next();
+                    if (event.isCharacters()) {
+                        Characters chars = event.asCharacters();
+                        String text = chars.getData();
+                        if (isAuthorText(text)) {
+                            eventReader.next();
+                            eventReader.next();
+                            event = (XMLEvent) eventReader.next();
+                            chars = event.asCharacters();
+                            author = chars.getData();
+                            return author;
                         }
                     }
                 }
             }
         }
-
         return author;
     }
-
+    
     private String getBookImageSource(XMLEventReader eventReader) {
         XMLEvent event;
         String src = null;
@@ -243,6 +248,13 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
                     }
                 }
             }
+            
+            if (event.isEndElement()) {
+                EndElement endElement = event.asEndElement();
+                if (ElementChecker.isElementWith(endElement, "div")) {
+                    return 0; // num of pages not found
+                }
+            }
         }
         return numOfPages;
     }
@@ -255,9 +267,10 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
                 if (ElementChecker.isElementWith(startElement, "p", "class", "price")) {
-                    eventReader.next();
-                    eventReader.next();
                     event = (XMLEvent) eventReader.next();
+                    while (!event.isCharacters()) {
+                        event = (XMLEvent) eventReader.next();
+                    }
                     Characters chars = event.asCharacters();
                     String text = chars.getData();
 
@@ -266,5 +279,12 @@ public class MuaSachHayBookCrawler extends BaseCrawler {
             }
         }
         return numOfPages;
+    }
+    
+    private boolean isAuthorText(String text) {
+        if (authorTexts.stream().anyMatch((authorText) -> (text.contains(authorText)))) {
+            return true;
+        }
+        return false;
     }
 }
