@@ -11,4 +11,5 @@ package constants;
  */
 public class URLConstants {
     public static String MUASACHHAY = "https://muasachhay.vn/";
+    public static String NEWSHOP = "https://newshop.vn";
 }

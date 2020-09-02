@@ -7,6 +7,7 @@ package listener;
 
 import constants.ConfigConstants;
 import crawler.muasachhay.MuaSachHayThread;
+import crawler.newshop.NewShopThread;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -15,21 +16,20 @@ import utils.DBUtils;
 
 public class BookStoreAppListener implements ServletContextListener {
 
-    private static String realPath;
     private static MuaSachHayThread muaSachHayThread;
+    private static NewShopThread newShopThread;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
 
-        realPath = context.getRealPath("/");
-
         if (ConfigConstants.ENABLE_CRAWLING) {
-            muaSachHayThread = new MuaSachHayThread(context);
-            muaSachHayThread.start();
+//            muaSachHayThread = new MuaSachHayThread(context);
+//            muaSachHayThread.start();
+            
+            newShopThread = new NewShopThread(context);
+            newShopThread.start();
         }
-
-        context.setAttribute("MUASACHHAY_THREAD", muaSachHayThread);
     }
 
     @Override
