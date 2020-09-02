@@ -24,8 +24,8 @@ public class BookStoreAppListener implements ServletContextListener {
         final ServletContext context = sce.getServletContext();
 
         if (ConfigConstants.ENABLE_CRAWLING) {
-//            muaSachHayThread = new MuaSachHayThread(context);
-//            muaSachHayThread.start();
+            muaSachHayThread = new MuaSachHayThread(context);
+            muaSachHayThread.start();
             
             newShopThread = new NewShopThread(context);
             newShopThread.start();

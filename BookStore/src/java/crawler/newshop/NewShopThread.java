@@ -50,7 +50,6 @@ public class NewShopThread extends BaseThread implements Runnable {
                             BaseThread.getInstance().wait();
                         }
                     }
-                    break;
                 }
                 
                 NewShopThread.sleep(ConfigConstants.CRAWLING_INTERVAL);
