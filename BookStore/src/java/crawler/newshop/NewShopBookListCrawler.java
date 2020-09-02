@@ -75,7 +75,6 @@ public class NewShopBookListCrawler extends BaseCrawler implements Runnable {
                         BaseThread.getInstance().wait();
                     }
                 }
-                break;
             }
         } catch (IOException | XMLStreamException | InterruptedException ex) {
             Logger.getLogger(NewShopBookListCrawler.class.getName())
@@ -112,6 +111,7 @@ public class NewShopBookListCrawler extends BaseCrawler implements Runnable {
                 StartElement startElement = event.asStartElement();
                 if (ElementChecker.isElementWith(startElement, "a", "class", "overlay")) {
                     String link = getHref(startElement);
+                    link = TextUtils.parseUnicodeLink(link);
                     links.add(link);
                 }
             }

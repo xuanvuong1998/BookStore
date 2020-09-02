@@ -80,7 +80,6 @@ public class NewShopCategoryPageCrawler extends BaseCrawler implements Runnable 
                         BaseThread.getInstance().wait();
                     }
                 }
-                break;
             }
         } catch (IOException | InterruptedException
                 | XMLStreamException | NumberFormatException ex) {

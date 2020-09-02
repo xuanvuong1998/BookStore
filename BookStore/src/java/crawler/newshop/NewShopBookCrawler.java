@@ -67,12 +67,12 @@ public class NewShopBookCrawler extends BaseCrawler {
 
         String imageSrc = getBookImageSource(eventReader);
 
-        String name = getBookName(eventReader);
+        String name = TextUtils.parseUnicode(getBookName(eventReader));
         if (name == null) {
             return null;
         }
 
-        String description = getDescription(eventReader);
+        String description = TextUtils.parseUnicode(getDescription(eventReader));
         Integer price = getPrice(eventReader);
 
         String link = pageUrl;
@@ -136,8 +136,10 @@ public class NewShopBookCrawler extends BaseCrawler {
                 StartElement startElement = event.asStartElement();
                 if (ElementChecker.isElementWith(startElement, "div", "class", "description")) {
                     event = (XMLEvent) eventReader.next();
-                    Characters nameChars = event.asCharacters();
-                    description = nameChars.getData();
+                    if (event.isCharacters()) {
+                        Characters nameChars = event.asCharacters();
+                        description = nameChars.getData();
+                    }
                     return description;
                 }
             }
