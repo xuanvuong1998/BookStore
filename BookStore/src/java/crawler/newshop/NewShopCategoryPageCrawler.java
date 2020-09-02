@@ -61,27 +61,26 @@ public class NewShopCategoryPageCrawler extends BaseCrawler implements Runnable 
             }
 
             int lastPage = getLastPage(document);
-            System.out.println("CATEGORY: " + pageUrl);
-            System.out.println("LAST PAGE: " + lastPage);
             lastPage = lastPage > ConfigConstants.CRAWL_PAGE_THRESHOLD 
                     ? ConfigConstants.CRAWL_PAGE_THRESHOLD : lastPage;
 
             for (int i = 1; i <= lastPage; ++i) {
-//                String categoryPageUrl = pageUrl + "page/" + i;
-//                System.out.println("PAGE URL: " + categoryPageUrl);
-//                Thread modelListCrawler = new Thread(
-//                        new MuaSachHayBookListCrawler(getContext(), categoryPageUrl, category));
-//                modelListCrawler.start();
-//
-//                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
-//                    modelListCrawler.join();
-//                }
+                String categoryPageUrl = pageUrl + "?page=" + i;
+                System.out.println("PAGE URL: " + categoryPageUrl);
+                Thread bookListCrawler = new Thread(
+                        new NewShopBookListCrawler(getContext(), categoryPageUrl, category));
+                bookListCrawler.start();
+
+                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
+                    bookListCrawler.join();
+                }
 
                 synchronized (BaseThread.getInstance()) {
                     while (BaseThread.isSuspended()) {
                         BaseThread.getInstance().wait();
                     }
                 }
+                break;
             }
         } catch (IOException | InterruptedException
                 | XMLStreamException | NumberFormatException ex) {

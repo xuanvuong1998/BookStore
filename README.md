@@ -6,7 +6,7 @@
 /**
  * maximum crawl page of a category
  */
-public static final int CRAWL_PAGE_THRESHOLD = 50;
+public static final int CRAWL_PAGE_THRESHOLD = 200;
 
 /**
  * Toggle crawling
@@ -23,3 +23,4 @@ public static final boolean ENABLE_CRAWLING = false;
 
 ## Page crawl
 1. https://muasachhay.vn/
+2. https://newshop.vn/
