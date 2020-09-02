@@ -56,26 +56,26 @@ public class NewShopBookListCrawler extends BaseCrawler implements Runnable {
             List<String> bookLinks = getBookLinks(document);
 
             for (String bookLink : bookLinks) {
-                System.out.println("BOOK LINK: " + bookLink);
-//                MuaSachHayBookCrawler bookCrawler
-//                        = new MuaSachHayBookCrawler(getContext(), bookLink, category);
-//
-//                Book book = bookCrawler.getBook();
-//                
-//                if (book == null) {
-//                    continue;
-//                }
-//                BookDAO.getInstance().saveBookWhileCrawling(book);
-//
-//                if (ConfigConstants.DEBUG) {
-//                    System.out.println("DEBUG saved model " + book.getLink());
-//                }
+                NewShopBookCrawler bookCrawler
+                        = new NewShopBookCrawler(getContext(), bookLink, category);
+
+                Book book = bookCrawler.getBook();
+                
+                if (book == null) {
+                    continue;
+                }
+                BookDAO.getInstance().saveBookWhileCrawling(book);
+
+                if (ConfigConstants.DEBUG) {
+                    System.out.println("DEBUG saved model " + book.getLink());
+                }
 
                 synchronized (BaseThread.getInstance()) {
                     while (BaseThread.isSuspended()) {
                         BaseThread.getInstance().wait();
                     }
                 }
+                break;
             }
         } catch (IOException | XMLStreamException | InterruptedException ex) {
             Logger.getLogger(NewShopBookListCrawler.class.getName())
