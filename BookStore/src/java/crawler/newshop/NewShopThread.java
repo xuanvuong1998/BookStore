@@ -30,20 +30,20 @@ public class NewShopThread extends BaseThread implements Runnable {
                 NewShopCategoryCrawler categoryCrawler = new NewShopCategoryCrawler(context);
                 Map<String, String> categories = categoryCrawler.getCategories(URL);
                 
-                System.out.println("CATEGORIES: ");
-                for (Map.Entry<String, String> cat: categories.entrySet()) {
-                    System.out.println(cat.getValue() + ": " + cat.getKey());
-                }
+//                System.out.println("CATEGORIES: ");
+//                for (Map.Entry<String, String> cat: categories.entrySet()) {
+//                    System.out.println(cat.getValue() + ": " + cat.getKey());
+//                }
                 
                 for (Map.Entry<String, String> entry : categories.entrySet()) {
-//                    Thread pageCrawlingThread = new Thread(
-//                        new MuaSachHayCategoryPageCrawler(context, entry.getKey(), entry.getValue()));
-//                    pageCrawlingThread.start();
-//                    
-//                    if (ConfigConstants.DEBUG) {
-//                        System.out.println("DEBUG MuaSachHay Id = " + pageCrawlingThread.getId()
-//                            + "(name, link) = " + entry.getKey() + ", " + entry.getValue());
-//                    }
+                    Thread pageCrawlingThread = new Thread(
+                        new NewShopCategoryPageCrawler(context, entry.getKey(), entry.getValue()));
+                    pageCrawlingThread.start();
+                    
+                    if (ConfigConstants.DEBUG) {
+                        System.out.println("DEBUG MuaSachHay Id = " + pageCrawlingThread.getId()
+                            + "(name, link) = " + entry.getKey() + ", " + entry.getValue());
+                    }
                     
                     synchronized (BaseThread.getInstance()) {
                         while (BaseThread.isSuspended()) {
